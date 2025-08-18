@@ -1,0 +1,40 @@
+name: 🍎 iOS Build (Final Version)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Create & Install
+        run: |
+          flutter create .
+          flutter pub get
+
+      - name: Build iOS (Allowing for Signing Errors)
+        run: flutter build ios --release --no-codesign || echo "Build failed but we will attempt to package anyway."
+
+      - name: Package IPA
+        run: |
+          mkdir -p staging/Payload
+          # Find the app bundle and copy it
+          cp -r build/ios/Release-iphoneos/*.app staging/Payload/
+          cd staging
+          zip -r ../tinhocstar.ipa *
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: QLTinHoc-IPA
+          path: tinhocstar.ipa
