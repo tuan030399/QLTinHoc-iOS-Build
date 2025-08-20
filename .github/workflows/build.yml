@@ -23,7 +23,7 @@ jobs:
           flutter pub get
 
       - name: Build iOS (Allowing for Signing Errors)
-        run: flutter build ios --release --no-codesign || echo "Build failed but we will attempt to package anyway."
+        run: flutter build ios --release --no-codesign
 
       - name: Package IPA
         run: |
