@@ -1,39 +1,27 @@
-# Uncomment this line to define a global platform for your project
+# Xác định vị trí thư mục gốc của dự án Flutter
+flutter_project_path = File.expand_path('..', __dir__)
+
+# Nạp các biến môi trường từ các file do Flutter tạo ra
+load File.join(flutter_project_path, '.ios', 'Flutter', 'Generated.xcconfig')
+
+# Xác định các thư viện mà Flutter cần từ các plugin
+require_relative File.join(flutter_project_path, '.ios', 'Flutter', 'podhelper.rb')
+
+# Định nghĩa nền tảng mục tiêu
 platform :ios, '13.0'
-
-# CocoaPods-managed Xcode project for the Runner target.
-#
-# To learn more, see: https://flutter.dev/go/ios-project-structure.
-
-ENV['COCOAPODS_DISABLE_STATS'] = 'true'
-
-project 'Runner', {
-  'Debug' => :debug,
-  'Profile' => :release,
-  'Release' => :release,
-}
-
-def flutter_root
-  generated_xcode_and_home_and_idea_and_gradle_and_dart_tool_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
-  unless File.exist?(File.join(generated_xcode_and_home_and_idea_and_gradle_and_dart_tool_path, '.metadata'))
-    generated_xcode_and_home_and_idea_and_gradle_and_dart_tool_path = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  end
-  generated_xcode_and_home_and_idea_and_gradle_and_dart_tool_path
-end
-
-require File.join(flutter_root, '.ios', 'Flutter', 'podhelper')
 
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  # Cài đặt tất cả các thư viện được định nghĩa bởi các plugin Flutter
+  install_all_flutter_pods(flutter_project_path)
 end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
-    # Đoạn code quan trọng để giải quyết lỗi Simulator
+    # Ép tất cả các thư viện phụ phải tuân thủ phiên bản iOS 13.0
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
     end
