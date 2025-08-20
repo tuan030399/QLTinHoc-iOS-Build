@@ -22,19 +22,12 @@ jobs:
           flutter create .
           flutter pub get
 
-      - name: Build iOS (Allowing for Signing Errors)
-        run: flutter build ios --release --no-codesign
-
-      - name: Package IPA
-        run: |
-          mkdir -p staging/Payload
-          # Find the app bundle and copy it
-          cp -r build/ios/Release-iphoneos/*.app staging/Payload/
-          cd staging
-          zip -r ../tinhocstar.ipa *
+      - name: Build and Package IPA
+        run: flutter build ipa --release --no-codesign
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Star-IPA
-          path: tinhocstar.ipa
+          name: QLTinHoc-IPA
+          # File .ipa bây giờ sẽ nằm trong thư mục build/ios/ipa/
+          path: build/ios/ipa/*.ipa 
