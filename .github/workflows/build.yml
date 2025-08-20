@@ -1,4 +1,4 @@
-name: 🍎 iOS Build (Final Version)
+name: 🍎 iOS Build (Final & Corrected Path)
 
 on:
   push:
@@ -9,25 +9,31 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - name: Checkout code
+      - name: ⬇️ Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Flutter
+      - name: 🐦 Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
-      - name: Create & Install
-        run: |
-          flutter create .
-          flutter pub get
+      # Chạy tất cả các lệnh từ bây giờ bên trong thư mục dự án
+      - name: ⚙️ Create Project & Install Dependencies
+        run: flutter create . --platforms=ios,android && flutter pub get
 
-      - name: Build and Package IPA
+      - name: 🛠️ Add iOS Camera & Photo Permissions
+        run: |
+          # Di chuyển vào thư mục iOS/Runner
+          cd ios/Runner
+          # Sử dụng công cụ PlistBuddy để thêm các quyền cần thiết vào Info.plist
+          /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string 'Ứng dụng cần truy cập camera để quét và chụp ảnh công việc.'" "Info.plist"
+          /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryUsageDescription string 'Ứng dụng cần truy cập thư viện ảnh để bạn có thể chọn ảnh.'" "Info.plist"
+          
+      - name: 📦 Build and Package IPA
         run: flutter build ipa --release --no-codesign
 
-      - name: Upload Artifact
+      - name: ⬆️ Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: QLTinHoc-IPA
-          # File .ipa bây giờ sẽ nằm trong thư mục build/ios/ipa/
-          path: build/ios/ipa/*.ipa 
+          path: build/ios/ipa/*.ipa
