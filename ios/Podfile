@@ -1,26 +1,41 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '13.0'
+
 # CocoaPods-managed Xcode project for the Runner target.
 #
-# This file is created by Flutter.
 # To learn more, see: https://flutter.dev/go/ios-project-structure.
 
-platform :ios, '13.0' # <-- YÊU CẦU PHIÊN BẢN TỐI THIỂU
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    flutter_additional_ios_build_settings(target)
-    # --> ĐOẠN CODE "ÉP" PHIÊN BẢN CHO TẤT CẢ THƯ VIỆN PHỤ
-    target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
-    end
-    # <-- KẾT THÚC ĐOẠN CODE "ÉP"
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_and_home_and_idea_and_gradle_and_dart_tool_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
+  unless File.exist?(File.join(generated_xcode_and_home_and_idea_and_gradle_and_dart_tool_path, '.metadata'))
+    generated_xcode_and_home_and_idea_and_gradle_and_dart_tool_path = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   end
+  generated_xcode_and_home_and_idea_and_gradle_and_dart_tool_path
 end
 
-flutter_application_path = File.join(File.dirname(__FILE__), '..')
+require File.join(flutter_root, '.ios', 'Flutter', 'podhelper')
 
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    # Đoạn code quan trọng để giải quyết lỗi Simulator
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+    end
+  end
 end
