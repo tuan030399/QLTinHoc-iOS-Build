@@ -1,6 +1,6 @@
-name: tinhocstar
+name: qltinhoc
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: 'none' 
 version: 1.0.0+1
 
 environment:
@@ -9,22 +9,27 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
-  # Sử dụng phiên bản mới nhất tương thích
-  cupertino_icons: ^1.0.2
+
+  # Nâng cấp các thư viện lên phiên bản mới nhất và ổn định
+  cupertino_icons: ^1.0.8
   gsheets: ^0.5.0
   intl: ^0.19.0
-  google_mlkit_text_recognition: ^0.11.0
-  image_picker: ^1.0.7
-  permission_handler: ^11.3.1
   crypto: ^3.0.3
   http: ^1.2.1
-  file_picker: ^8.0.0+1
-  flutter_secure_storage: ^9.0.0 # Thêm thư viện này nếu bạn dùng trong code mới
+  permission_handler: ^11.3.1
+  flutter_secure_storage: ^9.0.0
+  
+  # THAY ĐỔI QUAN TRỌNG:
+  # Chúng ta sẽ dùng image_picker và google_mlkit_text_recognition bản mới nhất
+  # và tạm thời bỏ file_picker vì nó có thể là nguồn gốc của DKPhotoGallery
+  image_picker: ^1.1.1
+  google_mlkit_text_recognition: ^0.12.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
